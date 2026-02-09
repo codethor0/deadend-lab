@@ -13,12 +13,15 @@ var forbiddenSecretLogPatterns = []string{
 	"session_key",
 	"k_enc",
 	"k_mac",
+	"k_rekey",
 	"shared_secret",
 	"exported_key",
 	`priv=`,
 	"private_key",
 	"seed=",
 	"handshake_secret",
+	"key=",
+	"plaintext=",
 }
 
 func TestNoSecretPatternsInLabAndCryptoCode(t *testing.T) {
