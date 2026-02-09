@@ -1,0 +1,19 @@
+{
+  "session_id_trunc_hex": "43dfa53d01392dc2",
+  "transcript_hex": "43dfa53d01392dc23b3bb513e8e0e7bc9cf6389bfd46b6b586a97805cdc417e4",
+  "messages": [
+    {
+      "counter": 0,
+      "msg_hex": "766563746f72206d6573736167652030",
+      "ad_hex": "6173736f63696174656420646174612030",
+      "cipher_hex": "3d7016df01ec36346268be2daf3d630055839592142dda853e40305160e380109ea7459d8e0986303503e94644576a21"
+    },
+    {
+      "counter": 1,
+      "msg_hex": "766563746f72206d6573736167652031",
+      "ad_hex": "6173736f63696174656420646174612031",
+      "cipher_hex": "fb9b2e41d686dbf55c14b91d53568ed8590068bf14947f3b0ef7eb49775dfe2627769054d8d11f794dc0621c30b87e27"
+    }
+  ],
+  "label": "two_message_safe_deterministic"
+}

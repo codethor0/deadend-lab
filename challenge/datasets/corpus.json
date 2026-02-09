@@ -1,0 +1,32 @@
+[
+  {
+    "label": "nonce_reuse_ct1",
+    "mode": "NAIVE",
+    "payload": "39dcdc649a4d760a1952648bff6f9bcf695041a906c181"
+  },
+  {
+    "label": "nonce_reuse_ct2",
+    "mode": "NAIVE",
+    "payload": "39dcdc649a4d755fea7999ea31a98c20c939ebace66608"
+  },
+  {
+    "label": "replay_first_ok",
+    "mode": "SAFE",
+    "payload": "22a0bc7f20f66d64e41c6c212c3fac48b3975f443f98f2949ce877ad893f5e279120c04a"
+  },
+  {
+    "label": "replay_second_reject",
+    "mode": "SAFE",
+    "err": "decryption failed"
+  },
+  {
+    "label": "tamper_reject",
+    "mode": "SAFE",
+    "err": "decryption failed"
+  },
+  {
+    "label": "roundtrip_ok",
+    "mode": "SAFE",
+    "payload": "5abaee77db2ac67a2a5343791ccd515bfe3f5e037398ce01ec152ad6e622ab68"
+  }
+]

@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Cache go modules
+        uses: actions/cache@v4
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61.0
+
+      - name: verify-clean
+        run: make verify-clean
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker build
+        run: docker build -t deadend-lab .
+
+  supply-chain-optional:
+    needs: [docker]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t deadend-lab .
+
+      - name: Generate SBOM
+        run: |
+          mkdir -p sbom
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd)/sbom:/out anchore/syft:v1.8.0 deadend-lab:latest -o cyclonedx-json=/out/sbom.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom/sbom.json

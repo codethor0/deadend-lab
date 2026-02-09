@@ -1,0 +1,7 @@
+services:
+  lab-server:
+    build: .
+    ports:
+      - "${DEE_PORT:-8080}:8080"
+    volumes:
+      - ./challenge/datasets:/app/datasets:ro
