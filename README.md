@@ -142,3 +142,4 @@ Contributions welcome: break NAIVE via demos, add attacks as `cmd/attacks/*`, ad
 - Email: codethor@gmail.com
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules. Changes require `make verify` to pass.
+
