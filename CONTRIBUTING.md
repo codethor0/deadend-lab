@@ -61,6 +61,25 @@ git config --global --get user.signingkey
 
 Then: `git push -u origin main`, tag v0.1.0, push tag, create GitHub Release with Docker/break-NAIVE/SAFE-resists notes.
 
+## Branch and Dependency Policies
+
+### Branch Management
+- **Main branch**: Protected - no direct pushes
+- **Feature branches**: Create from main, submit PR
+- **Merge requirements**: All tests must pass, at least 1 review
+
+### Dependency Updates
+This repository uses **pinned dependencies** for deterministic cryptographic builds.
+
+**Process for updates:**
+1. Check security alerts in GitHub Security tab
+2. Review changelog for cryptographic implications
+3. Update single dependency: `go get -u package@version`
+4. Run full verification: `make verify`
+5. Commit with attribution: `git commit -m "deps: update package to vX.X.X"`
+
+**NO automated dependency updates** - all commits must maintain Thor Thor attribution.
+
 ## Policy
 
 - Vector generation uses `internal/drbg` and deterministic handshake paths only. See `tests/policy/` for import and symbol guards.

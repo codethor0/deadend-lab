@@ -175,6 +175,15 @@ Contributions welcome: break NAIVE via demos, add attacks as `cmd/attacks/*`, ad
 
 ## Security Features
 
+### Repository Hardening Status
+- Branch protection: Enabled
+- CodeQL scanning: Active
+- Secret scanning: Active
+- Private vulnerability reporting: Enabled
+- Commit attribution policy: Enforced
+- Dependabot security alerts: Active (no auto-PRs)
+
+### Reporting
 - **Private vulnerability reporting:** Report sensitive findings via [GitHub advisory](https://github.com/codethor0/deadend-lab/security/advisories/new).
 - **Dependabot alerts:** Go module vulnerabilities monitored weekly.
 - **CodeQL scanning:** Static analysis on push, PR, and weekly schedule.
