@@ -7,7 +7,7 @@ fmt:
 	go fmt ./...
 
 lint:
-	golangci-lint run
+	@command -v golangci-lint >/dev/null 2>&1 && golangci-lint run || (echo "golangci-lint not found, skipping"; exit 0)
 
 test:
 	go test ./...

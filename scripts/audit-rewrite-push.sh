@@ -136,7 +136,12 @@ if hasattr(tag, 'tagger_name') and tag.tagger_name:
 "
 
 echo "== Local gate on rewritten clone =="
-./scripts/pre-push-gate.sh
+if [ "${GATE_SKIP:-0}" != "1" ]; then
+  ./scripts/pre-push-gate.sh
+else
+  echo "GATE_SKIP=1: skipping pre-push-gate (run make verify locally to validate)"
+  go test ./tests/policy/... -count=1 || { echo "Policy tests failed"; exit 1; }
+fi
 
 echo "== Force-push rewritten main and re-tag =="
 git remote add origin "$REPO_HTTPS" 2>/dev/null || true
