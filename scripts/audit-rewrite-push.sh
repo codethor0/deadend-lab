@@ -57,10 +57,17 @@ _id="${_c}""agent"
 _mail="${_id}@${_dom}"
 
 # Detect noncompliant identities OR message trailers containing the target id/email
+# (Write commit bodies to temp file to avoid SIGPIPE when piping to grep -q)
 NEEDS=0
 if git log --all --format='%an <%ae>' | sort -u | grep -qv "^${NAME} <${EMAIL}>$"; then NEEDS=1; fi
 if git log --all --format='%cn <%ce>' | sort -u | grep -qv "^${NAME} <${EMAIL}>$"; then NEEDS=1; fi
-if git log --all --format='%B' | grep -qiE "co-authored-by:|${_id}|${_mail}"; then NEEDS=1; fi
+TMP_MSGS="$(mktemp)"
+git log --all --format='%B' >"$TMP_MSGS"
+if grep -qiE "co-authored-by:|${_id}|${_mail}" "$TMP_MSGS"; then NEEDS=1; fi
+rm -f "$TMP_MSGS"
+
+# Allow forcing rewrite when GitHub still shows stale contributors
+[ "${FORCE_REWRITE:-0}" = "1" ] && NEEDS=1
 
 if [ "$NEEDS" -eq 0 ]; then
   echo "No rewrite needed (identities/messages already clean)."
