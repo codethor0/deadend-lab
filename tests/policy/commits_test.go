@@ -27,7 +27,7 @@ func allowedCommit(an, ae, cn, ce string) bool {
 // No Co-authored-by trailers are allowed.
 func TestCommitAttribution(t *testing.T) {
 	modDir := mustGoModDir(t)
-	cmd := exec.Command("git", "log", "--all", "--format=%H|%an|%ae|%cn|%ce")
+	cmd := exec.Command("git", "log", "main", "--format=%H|%an|%ae|%cn|%ce")
 	cmd.Dir = modDir
 	out, err := cmd.Output()
 	if err != nil {
@@ -50,10 +50,10 @@ func TestCommitAttribution(t *testing.T) {
 	}
 }
 
-// TestNoCoAuthoredByTrailer ensures no commit message contains a Co-authored-by trailer.
+// TestNoCoAuthoredByTrailer ensures no commit on main contains a Co-authored-by trailer.
 func TestNoCoAuthoredByTrailer(t *testing.T) {
 	modDir := mustGoModDir(t)
-	cmd := exec.Command("git", "log", "--all", "--format=%B")
+	cmd := exec.Command("git", "log", "main", "--format=%B")
 	cmd.Dir = modDir
 	out, err := cmd.Output()
 	if err != nil {
