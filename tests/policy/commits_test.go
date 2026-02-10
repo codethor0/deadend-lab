@@ -20,6 +20,10 @@ func allowedCommit(an, ae, cn, ce string) bool {
 	if an == "dependabot[bot]" && cn == "GitHub" {
 		return true
 	}
+	// GitHub squash-merge: author Thor Thor (verified email), committer GitHub
+	if an == allowedAuthorName && cn == "GitHub" && strings.Contains(ae, "codethor") {
+		return true
+	}
 	return false
 }
 
