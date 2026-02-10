@@ -79,6 +79,10 @@ If port 8080 is busy, override: `DEE_PORT=9188 docker compose up -d`
 - **TestSAFERejectsCallerNonce**: EncryptNaiveWithNonce returns ErrDecrypt in SAFE.
 - **TestUniformFailure**: Tamper, wrong key, wrong AD all return identical ErrDecrypt (no oracle).
 
+## Threat model
+
+See [spec/threat-model.md](spec/threat-model.md) for the attacker model and assumptions.
+
 ## Specs
 
 - spec/dee.md - Protocol, key schedule, modes
@@ -86,25 +90,9 @@ If port 8080 is busy, override: `DEE_PORT=9188 docker compose up -d`
 - spec/threat-model.md - Attacker model
 - spec/security-goals.md - Test mapping
 
-## Challenge
+## How to validate
 
-- challenge/break-me.md - Rules and win conditions
-- challenge/scoreboard.md - Scoring rubric
-- challenge/datasets/ - Generated corpuses
-
-## Releases
-
-See [CHANGELOG.md](CHANGELOG.md).
-
-### Local release-candidate run (stop-the-line gate)
-
-From a clean working tree:
-
-```bash
-./scripts/pre-push-gate.sh
-```
-
-Or manually (paste-and-run from repo root):
+Single paste-and-run from repo root (requires clean tree, Go 1.22+, Docker):
 
 ```bash
 set -euo pipefail
@@ -121,25 +109,53 @@ curl -fsS -X POST http://localhost:9188/scenario/safe >/dev/null
 curl -fsS -X POST http://localhost:9188/scenario/naive >/dev/null
 go run ./cmd/attacks/nonce-reuse
 go run ./cmd/attacks/replay
+DEE_PORT=9188 docker compose down
 ```
 
-Or step-by-step:
+## Design constraints and invariants
+
+- Nonce uniqueness (SAFE): every (counter, AD) yields a unique nonce; no caller-supplied nonce.
+- Counter monotonicity: replay and out-of-order ciphertexts rejected.
+- Uniform failure: tamper, wrong key, wrong AD all return identical ErrDecrypt (no oracle).
+- Policy tests enforce: deterministic DRBG, handshake vectors only, no secrets in logs.
+
+## Documentation map
+
+Wiki disabled; docs live in `spec/` (protocol, threat model) and `challenge/` (CTF rules, scoring).
+
+## Packages
+
+No packages published; run from source or Docker only.
+
+## Challenge
+
+- challenge/break-me.md - Rules and win conditions
+- challenge/scoreboard.md - Scoring rubric
+- challenge/datasets/ - Generated corpuses
+
+## Releases
+
+See [CHANGELOG.md](CHANGELOG.md). Releases are signed; tags use SSH or GPG signing.
+
+### Verify signatures
 
 ```bash
-make verify-clean
-docker build -t deadend-lab .
-DEE_PORT=9188 docker compose up -d
-curl http://localhost:9188/health
-curl -X POST http://localhost:9188/scenario/safe
-curl -X POST http://localhost:9188/scenario/naive
-go run ./cmd/attacks/nonce-reuse
-go run ./cmd/attacks/replay
+git log -1 --show-signature
+git tag -v v0.1.0
+```
+
+### Local release-candidate run
+
+From a clean working tree, run the full validation block (see "How to validate" above) or:
+
+```bash
+./scripts/pre-push-gate.sh
 ```
 
 ### Tag and push
 
 ```bash
-git tag -a v0.1.0 -m "deadend-lab research preview v0.1.0"
+git tag -a v0.1.1 -m "deadend-lab v0.1.1"
 git push origin main --tags
 ```
 
@@ -147,9 +163,11 @@ git push origin main --tags
 
 Include:
 
-- **How to run Docker**: `docker build -t deadend-lab .` then `DEE_PORT=9188 docker compose up -d` (override port if 8080 is busy)
-- **How to break NAIVE**: `make attack-nonce-reuse` (nonce reuse), `make attack-replay` (replay)
-- **Why SAFE resists**: Invariant tests (nonce uniqueness, counter monotonicity, uniform failure); policy tests (deterministic DRBG/handshake vector-only); see README "Why SAFE Resists"
+- **Research / CTF only** - not for production use.
+- **How to reproduce validation**: Run the "How to validate" block from README.
+- **How to run Docker**: `docker build -t deadend-lab .` then `DEE_PORT=9188 docker compose up -d` (override port if 8080 is busy).
+- **How to break NAIVE**: `make attack-nonce-reuse` (nonce reuse), `make attack-replay` (replay).
+- **Why SAFE resists**: Invariant tests (nonce uniqueness, counter monotonicity, uniform failure); policy tests (deterministic DRBG/handshake vector-only); see README "Why SAFE Resists".
 
 ### Post-release feedback
 

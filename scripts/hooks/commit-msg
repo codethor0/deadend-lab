@@ -1,0 +1,8 @@
+#!/bin/sh
+# Reject commit messages containing Co-authored-by trailer.
+# Install: cp scripts/hooks/commit-msg .git/hooks/commit-msg && chmod +x .git/hooks/commit-msg
+if grep -qi 'co-authored-by:' "$1"; then
+  echo "commit-msg: Co-authored-by trailer not allowed" >&2
+  exit 1
+fi
+exit 0
