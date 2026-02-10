@@ -8,7 +8,21 @@
 
 **RESEARCH / CTF ONLY - DO NOT USE IN PRODUCTION**
 
-Research and challenge harness for DEE + StegoPQ handshake. This is not production crypto.
+Research and challenge harness for Dead-End Encryption (DEE) and StegoPQ. This is not production crypto.
+
+## What This Repo Is
+
+A lab for studying session-based encryption with hybrid classical/post-quantum key agreement. DEE combines X25519 and ML-KEM (Kyber) in a fused handshake via HKDF. Session keys derive from the transcript. The protocol exposes two modes: NAIVE (intentionally weak) and SAFE (invariant-hardened). StegoPQ adds optional carrier encoding of handshake payloads for anti-fingerprinting research (see spec/stegopq.md).
+
+## Scope
+
+- **In scope**: Protocol implementation, invariant tests, attack demos, challenge scoring, deterministic vectors.
+- **Out of scope**: Production deployment, real security guarantees, compliance validation.
+
+## Modes
+
+- **NAIVE**: Intentionally breakable. Caller-supplied nonce allows nonce reuse; no counter monotonicity enforces replay. Use for CTF and learning.
+- **SAFE**: Nonce uniqueness, counter monotonicity, uniform failure on tamper. Resists nonce reuse and replay.
 
 ## Quick Start
 
@@ -147,5 +161,5 @@ Contributions welcome: break NAIVE via demos, add attacks as `cmd/attacks/*`, ad
 - GitHub: [@codethor0](https://github.com/codethor0)
 - Email: codethor@gmail.com
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules. Changes require `make verify` to pass.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution rules. Changes require `make verify` to pass. Do not weaken tests or relax security properties. License: MIT. Responsible disclosure: [SECURITY.md](SECURITY.md).
 
