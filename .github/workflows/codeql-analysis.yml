@@ -1,4 +1,6 @@
-name: "CodeQL"
+# CodeQL analysis for Go
+# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors
+name: CodeQL
 
 on:
   push:
@@ -20,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['go']
+        language: [go]
 
     steps:
       - name: Checkout repository

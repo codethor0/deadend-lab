@@ -18,8 +18,8 @@ This project is a **research and CTF (Capture The Flag) harness** for studying D
 
 If you discover a vulnerability in this research harness:
 
-1. **Preferred:** Use [Private vulnerability reporting](https://github.com/codethor0/deadend-lab/security/advisories/new) on GitHub.
-2. **Alternative:** Email codethor@gmail.com with details.
-3. **For research/CTF issues:** Open a GitHub Issue in this repository.
+1. **Preferred:** Use [Private vulnerability reporting](https://github.com/codethor0/deadend-lab/security/advisories/new) on GitHub for sensitive disclosures.
+2. **For research/CTF issues:** Open a GitHub Issue in this repository.
+3. **Alternative:** Email codethor@gmail.com if the finding could affect other research tooling or documentation.
 
 We do not offer bug bounties. This is a learning and research project.

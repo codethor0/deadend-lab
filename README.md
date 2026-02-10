@@ -175,13 +175,11 @@ Contributions welcome: break NAIVE via demos, add attacks as `cmd/attacks/*`, ad
 
 ## Security Features
 
-- **Private vulnerability reporting**: Report vulnerabilities privately via GitHub.
-- **Dependabot alerts**: Automatic monitoring of Go module vulnerabilities.
-- **CodeQL scanning**: Static analysis for security and code quality.
-- **Secret scanning**: Detection of accidentally committed secrets.
-- **Security policy**: See [SECURITY.md](SECURITY.md).
-
-To report security issues: use [Private vulnerability reporting](https://github.com/codethor0/deadend-lab/security/advisories/new) or email codethor@gmail.com.
+- **Private vulnerability reporting:** Report sensitive findings via [GitHub advisory](https://github.com/codethor0/deadend-lab/security/advisories/new).
+- **Dependabot alerts:** Go module vulnerabilities monitored weekly.
+- **CodeQL scanning:** Static analysis on push, PR, and weekly schedule.
+- **Secret scanning:** Detection of accidentally committed secrets.
+- **Policy:** See [SECURITY.md](SECURITY.md).
 
 ## Author / Maintainer
 

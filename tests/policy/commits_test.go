@@ -11,7 +11,19 @@ const (
 	allowedAuthorName  = "Thor Thor"
 )
 
-// TestCommitAttribution enforces that every commit (author and committer) uses the maintainer identity.
+// allowedCommit is true if author+committer match maintainer or Dependabot (GitHub's dependency bot).
+func allowedCommit(an, ae, cn, ce string) bool {
+	if an == allowedAuthorName && ae == allowedAuthorEmail && cn == allowedAuthorName && ce == allowedAuthorEmail {
+		return true
+	}
+	// Dependabot dependency update commits (author: dependabot[bot], committer: GitHub)
+	if an == "dependabot[bot]" && cn == "GitHub" {
+		return true
+	}
+	return false
+}
+
+// TestCommitAttribution enforces that every commit uses maintainer identity or allowed automation (Dependabot).
 // No Co-authored-by trailers are allowed.
 func TestCommitAttribution(t *testing.T) {
 	modDir := mustGoModDir(t)
@@ -32,17 +44,8 @@ func TestCommitAttribution(t *testing.T) {
 			continue
 		}
 		hash, an, ae, cn, ce := parts[0], parts[1], parts[2], parts[3], parts[4]
-		if ae != allowedAuthorEmail {
-			t.Errorf("commit %s: author email %q != allowed %q", hash[:12], ae, allowedAuthorEmail)
-		}
-		if an != allowedAuthorName {
-			t.Errorf("commit %s: author name %q != allowed %q", hash[:12], an, allowedAuthorName)
-		}
-		if ce != allowedAuthorEmail {
-			t.Errorf("commit %s: committer email %q != allowed %q", hash[:12], ce, allowedAuthorEmail)
-		}
-		if cn != allowedAuthorName {
-			t.Errorf("commit %s: committer name %q != allowed %q", hash[:12], cn, allowedAuthorName)
+		if !allowedCommit(an, ae, cn, ce) {
+			t.Errorf("commit %s: disallowed author %q <%s> committer %q <%s>", hash[:12], an, ae, cn, ce)
 		}
 	}
 }
