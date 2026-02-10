@@ -11,7 +11,7 @@ const (
 	allowedAuthorName  = "Thor Thor"
 )
 
-// allowedCommit is true if author+committer match maintainer or Dependabot (GitHub's dependency bot).
+// allowedCommit is true if author+committer match maintainer or allowed automation.
 func allowedCommit(an, ae, cn, ce string) bool {
 	if an == allowedAuthorName && ae == allowedAuthorEmail && cn == allowedAuthorName && ce == allowedAuthorEmail {
 		return true
