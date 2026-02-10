@@ -19,6 +19,16 @@ Commits that show "Verified" on GitHub indicate the author cryptographically sig
 
 No private key material or key-generation scripts belong in this repo.
 
+## Local commit guardrail (optional)
+
+To reject Co-authored-by trailers before commit creation:
+
+```bash
+cp scripts/hooks/commit-msg .git/hooks/commit-msg && chmod +x .git/hooks/commit-msg
+```
+
+This does not modify global git config.
+
 ## Requirements
 
 - **`make verify` must pass** before any PR is merged.
