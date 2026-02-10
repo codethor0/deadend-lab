@@ -1,7 +1,7 @@
 .PHONY: fmt lint test test-race test-repeat verify verify-clean release-check secret-scan rc clean fuzz build docker-build docker-run corpus vectors
 
 clean:
-	rm -rf bin
+	rm -rf bin dist coverage tmp
 
 fmt:
 	go fmt ./...

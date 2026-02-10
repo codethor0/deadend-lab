@@ -1,14 +1,19 @@
 package policy
 
 import (
+	"bytes"
+	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
+
+	"deadend-lab/pkg/dee"
 )
 
-// Forbidden substrings: if present in cmd/ or pkg/ Go source, could indicate
-// accidental secret logging. Goal is to prevent future additions; not proving perfect secrecy.
+// Forbidden substrings: if present in cmd/ or pkg/ Go source, or in runtime logs,
+// could indicate accidental secret logging. Goal is to prevent future additions; not proving perfect secrecy.
 var forbiddenSecretLogPatterns = []string{
 	"session_key",
 	"k_enc",
@@ -22,6 +27,49 @@ var forbiddenSecretLogPatterns = []string{
 	"handshake_secret",
 	"key=",
 	"plaintext=",
+}
+
+// Max hex dump length allowed in logs (prevents accidental raw key/session dumps).
+const maxHexInLogs = 64
+
+// TestNoSecretsInRuntimeLogs runs a SAFE scenario and fails if log output contains
+// forbidden secret patterns or overly long hex dumps. Catches future regressions.
+func TestNoSecretsInRuntimeLogs(t *testing.T) {
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	defer log.SetOutput(os.Stderr)
+
+	initMsg, initSession, err := dee.HandshakeInit(dee.Safe, nil)
+	if err != nil {
+		t.Fatalf("HandshakeInit: %v", err)
+	}
+	respMsg, respSession, err := dee.HandshakeResp(dee.Safe, initMsg, nil)
+	if err != nil {
+		t.Fatalf("HandshakeResp: %v", err)
+	}
+	if err := initSession.HandshakeComplete(respMsg); err != nil {
+		t.Fatalf("HandshakeComplete: %v", err)
+	}
+	plaintext := []byte("test message")
+	ct, err := initSession.Encrypt(plaintext, nil)
+	if err != nil {
+		t.Fatalf("Encrypt: %v", err)
+	}
+	header := respSession.WireHeader(0)
+	_, err = respSession.Decrypt(ct, header)
+	if err != nil {
+		t.Fatalf("Decrypt: %v", err)
+	}
+
+	out := buf.String()
+	for _, pat := range forbiddenSecretLogPatterns {
+		if strings.Contains(out, pat) {
+			t.Errorf("forbidden secret pattern %q found in runtime logs", pat)
+		}
+	}
+	if re := regexp.MustCompile(`[0-9a-fA-F]{65,}`); re.MatchString(out) {
+		t.Errorf("runtime logs contain hex dump longer than %d chars", maxHexInLogs)
+	}
 }
 
 func TestNoSecretPatternsInLabAndCryptoCode(t *testing.T) {
