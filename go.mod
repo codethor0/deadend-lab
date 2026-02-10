@@ -1,10 +1,10 @@
 module deadend-lab
 
-go 1.22
+go 1.24.0
 
 require (
 	github.com/cloudflare/circl v1.3.7
-	golang.org/x/crypto v0.22.0
+	golang.org/x/crypto v0.48.0
 )
 
-require golang.org/x/sys v0.19.0 // indirect
+require golang.org/x/sys v0.41.0 // indirect
