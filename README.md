@@ -1,3 +1,9 @@
+<!-- deadend-lab:logo -->
+<p align="center">
+  <img src="assets/deadend-lab-logo.png" alt="deadend-lab logo" width="420" />
+</p>
+<!-- /deadend-lab:logo -->
+
 # Dead-End Encryption (DEE) Lab
 
 **RESEARCH / CTF ONLY - DO NOT USE IN PRODUCTION**
